@@ -18,6 +18,9 @@ nodes:
   - size_gb: 50
     type: thin
     datastore: datastore2
+  - size_gb: 50
+    type: thin
+    datastore: datastore2
   hardware:
     memory_mb: 1024
     num_cpus: 2
@@ -26,11 +29,11 @@ nodes:
   - name: vg_os
     pvs: /dev/sda2
   lvol:
-  - name: lv_django
+  - name: lv_hello
     size: 30000
     vg: vg_data
-    mount: /opt/django
-    
+    mount: /opt/djangoprojects
+
 - name: justai-db01
   os: Centos7
   services:
@@ -48,6 +51,9 @@ nodes:
   - size_gb: 50
     type: thin
     datastore: datastore2
+  - size_gb: 50
+    type: thin
+    datastore: datastore2
   hardware:
     memory_mb: 1024
     num_cpus: 2
@@ -56,7 +62,7 @@ nodes:
   - name: vg_os
     pvs: /dev/sda2
   lvol:
-  - name: lv_pgsql
+  - name: lv_postgres
     size: 30000
     vg: vg_data
-    mount: /var/lib
+    mount: /var/lib/pgsqls
