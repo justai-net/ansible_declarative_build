@@ -27,7 +27,7 @@ nodes:
     scsi: paravirtual
   lvg:
   - name: vg_os
-    pvs: /dev/sda1
+    pvs: /dev/sda2
   - name: vg_data
     pvs: /dev/sdb
   lvol:
@@ -65,7 +65,9 @@ nodes:
     scsi: paravirtual
   lvg:
   - name: vg_os
-    pvs: /dev/sda1
+    pvs: /dev/sda2
+  - name: vg_data
+    pvs: /dev/sdb
   lvol:
   - name: lv_var
     mount: /var/
