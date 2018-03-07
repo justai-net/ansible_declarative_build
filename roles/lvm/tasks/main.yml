@@ -19,6 +19,7 @@
     state: present
   with_items:
   - "{{ hostvars[inventory_hostname]['lvol'] }}"
+  ignore_errors: yes
 
 - name: Create file system
   become: yes

@@ -1,0 +1,12 @@
+---
+vcenter_hostname: 192.168.30.5
+vcenter_user: administrator@vsphere.local
+vcenter_pass: vagrant
+vmtemplate: Centos7
+new_port: 22
+inventory_dir: /Users/adam/Documents/devops/ansible/vmware_guest/inventory
+ansible_ssh_user: vagrant
+ansible_ssh_pass: vagrant
+ansible_become_user: root
+ansible_become_pass: vagrant
+ansible_ssh_extra_args: '-o StrictHostKeyChecking=no'
