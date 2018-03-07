@@ -1,0 +1,1 @@
+{{ item.name }} ansible_ssh_host={{ facts['virtual_machines']['%s' | format(item.name)]['ip_address'] }}
