@@ -31,14 +31,10 @@ nodes:
   - name: vg_data
     pvs: /dev/sdb
   lvol:
-  - name: lv_var
-    mount: /var/
-    vg: vg_os
   - name: lv_django
     size: 30000
     vg: vg_data
     mount: /opt/django
-
 - name: justai-db01
   os: Centos7
   services:
@@ -69,9 +65,6 @@ nodes:
   - name: vg_data
     pvs: /dev/sdb
   lvol:
-  - name: lv_var
-    mount: /var/
-    vg: vg_os
   - name: lv_pgsql
     size: 30000
     vg: vg_data
