@@ -1,6 +1,7 @@
 ---
 - name: Clone or Ensure Virtual Machines using pyVmomi
   hosts: localhost
+  connection: local
   gather_facts: False
   vars_files:
   - vars.yml
