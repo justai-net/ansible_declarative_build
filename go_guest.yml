@@ -1,0 +1,7 @@
+- name: Proceed to configure the Hostname, NIC
+  hosts: all
+  roles:
+     - hostname
+     - network
+     - motd
+     - { role: lvm, when: lvg is defined }
