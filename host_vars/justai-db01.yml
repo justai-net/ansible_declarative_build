@@ -1,0 +1,13 @@
+---
+name: "justai-db01"
+group: "[u'postgres', u'motd']"
+ansible_ssh_host: "192.168.149.195"
+ansible_ssh_port: "22"
+inventory_dir: "/Users/adam/Documents/devops/ansible/vmware_guest/inventory"
+ansible_ssh_user: "{{ vault_ssh_user }}"
+ansible_ssh_pass: "{{ vault_ssh_pass }}"
+ansible_become_user: "{{ vault_become_user }}"
+ansible_become_pass: "{{ vault_become_pass }}"
+ansible_ssh_extra_args: '-o StrictHostKeyChecking=no'
+lvg: "[{u'pvs': u'/dev/sda2', u'name': u'vg_os'}, {u'pvs': u'/dev/sdb', u'name': u'vg_data'}]"
+lvol: "[{u'mount': u'/var/lib', u'vg': u'vg_data', u'name': u'lv_pgsql', u'size': 30000}]"
