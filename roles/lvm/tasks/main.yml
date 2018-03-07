@@ -1,0 +1,41 @@
+---
+- name: Create Volume Group
+  become: yes
+  lvg:
+    vg: "{{ item.name }}"
+    pvs: "{{ item.pvs }}"
+    pesize: 4
+  with_items:
+  - "{{ hostvars[inventory_hostname]['lvg'] }}"
+  ignore_errors: yes
+
+- name: Create Logical Volume
+  become: yes
+  lvol:
+    force: yes
+    vg: "{{ item.vg }}"
+    lv: "{{ item.name }}"
+    size: "{{ item.size }}"
+    state: present
+  with_items:
+  - "{{ hostvars[inventory_hostname]['lvol'] }}"
+
+- name: Create file system
+  become: yes
+  filesystem:
+    fstype: ext4
+    dev: "/dev/{{ item.vg }}/{{ item.name }}"
+  with_items:
+  - "{{ hostvars[inventory_hostname]['lvol'] }}"
+  ignore_errors: yes
+
+- name: Mount path and add to /etc/fstab
+  become: yes
+  mount:
+    path: "{{ item.mount }}"
+    src: "/dev/mapper/{{ item.vg }}-{{ item.name }}"
+    state: mounted
+    fstype: ext4
+  with_items:
+  - "{{ hostvars[inventory_hostname]['lvol'] }}"
+  ignore_errors: yes

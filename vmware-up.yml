@@ -1,0 +1,81 @@
+---
+- name: Clone or Ensure Virtual Machines using pyVmomi
+  hosts: localhost
+  gather_facts: False
+  vars_files:
+  - vars.yml
+  - virtual_machines.yml
+
+  tasks:
+  - name: Gather Facts of all VMs in Virtual Center or ESXi.
+    local_action:
+      module: vmware_vm_facts
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_user }}"
+      password: "{{ vcenter_pass }}"
+      validate_certs: False
+    register: facts
+
+  - name: Check if virtual machine name exists and Verbose UUID
+    debug:
+        msg: "{{ item.name }}: {{ facts['virtual_machines']['%s'| format(item.name)]['uuid'] }}"
+    with_items:
+    - "{{ nodes }}"
+    ignore_errors: true
+    register: uuid
+
+  - name: Generate tasks to clone and create virtual machines
+    template:
+      src: templates/day1.j2
+      dest: './{{ item.name }}.yml'
+    with_items:
+    - "{{ nodes }}"
+    when: uuid|failed
+
+  - name: Generate tasks to ensure the state of virtual machines
+    template:
+      src: templates/day2.j2
+      dest: './{{ item.name }}.yml'
+    with_items:
+    - "{{ nodes }}"
+    when: uuid|succeeded
+
+  - name: Include tasks
+    include_tasks: "{{ item.name }}.yml"
+    with_items:
+    - "{{ nodes }}"
+
+  - name: Gather Facts of all VMs in Virtual Center or ESXi.
+    local_action:
+      module: vmware_vm_facts
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_user }}"
+      password: "{{ vcenter_pass }}"
+      validate_certs: False
+    register: facts
+
+  - name: Add Existing VM to dynamic inventory for further tasks
+    add_host:
+      name: "{{ item.name }}"
+      group: "{{ item.services }}"
+      ansible_ssh_host: "{{ facts['virtual_machines']['%s' | format(item.name)]['ip_address']  }}"
+      ansible_ssh_port: "{{ new_port }}"
+      inventory_dir: "{{ inventory_dir }}"
+      ansible_ssh_user: "{{ ansible_ssh_user }}"
+      ansible_ssh_pass: "{{ ansible_ssh_pass }}"
+      ansible_become_user: "{{ ansible_become_user }}"
+      ansible_become_pass: "{{ ansible_become_pass }}"
+      ansible_ssh_extra_args: '-o StrictHostKeyChecking=no'
+      lvg: "{{ item.lvg }}"
+      lvol: "{{ item.lvol }}"
+    changed_when: false
+    with_items:
+      - "{{ nodes }}"
+
+- name: Proceed to configure the Hostname, NIC
+  hosts: all
+  roles:
+     - hostname
+     - network
+     - motd
+     - { role: lvm, when: lvg is defined }
