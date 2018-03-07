@@ -9,6 +9,11 @@
   - "{{ hostvars[inventory_hostname]['lvg'] }}"
   ignore_errors: yes
 
+- name: Get vgdisplay
+  become: yes
+  command: vgdisplay -C
+  register: vgdisplay
+
 - name: Create Logical Volume
   become: yes
   lvol:
@@ -20,6 +25,11 @@
   with_items:
   - "{{ hostvars[inventory_hostname]['lvol'] }}"
   ignore_errors: yes
+
+- name: Get lvdisplay
+  become: yes
+  command: lvdisplay -C
+  register: lvdisplay
 
 - name: Create file system
   become: yes
@@ -40,3 +50,20 @@
   with_items:
   - "{{ hostvars[inventory_hostname]['lvol'] }}"
   ignore_errors: yes
+
+- name: Get /etc/fstab
+  become: yes
+  command: cat /etc/fstab
+  register: fstab
+
+- name: Get df -hP
+  command: df -hP
+  register: df
+
+- name: Show vgdisplay, lvdisplay and fstab
+  debug:
+    msg:
+      - "{{ vgdisplay.stdout_lines }}"
+      - "{{ lvdisplay.stdout_lines}}"
+      - "{{ fstab.stdout_lines }}"
+      - "{{ df.stdout_lines }}"
