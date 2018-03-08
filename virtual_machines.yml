@@ -28,6 +28,8 @@ nodes:
   lvg:
   - name: vg_os
     pvs: /dev/sda2
+  - name: vg_data
+    pvs: /dev/sdb
   lvol:
   - name: lv_hello
     size: 30000
@@ -61,6 +63,8 @@ nodes:
   lvg:
   - name: vg_os
     pvs: /dev/sda2
+  - name: vg_data
+    pvs: /dev/sdb
   lvol:
   - name: lv_postgres
     size: 30000
